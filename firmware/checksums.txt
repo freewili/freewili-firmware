@@ -1,3 +1,2 @@
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./checksums.txt
-3da05d510992dce7a6cf4acf40fe4adab9270233abb7ac4ad3264a04ca668ae5  ./display/FreeWiliDisplay.uf2
+03c8186f8f1fe7afd198dd75ee336f373d753500ea6742733d66162149292bdb  ./display/FreeWiliDisplayV40.uf2
 d0fb6fbfd0ca1007672ceaaf637999d5f7b8a3c452b65bc35ca203735b690b30  ./main/FreeWiliMain.uf2
