@@ -1,2 +1,0 @@
-5d5ebe0e967ba7c69ab973772d93dfb78341268641f45d769508a8b54e5c26c5 *./display/FreeWiliDisplay.uf2
-55285d84fe95cf87e4d95c144c2dcd6261da2ac44d966fb0bba3c4a6b8e56b49 *./main/FreeWiliMain.uf2
