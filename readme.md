@@ -5,5 +5,5 @@ Follow update instructions here:  https://docs.freewili.com/freewili-firmware-up
 Updating checksum file:
 ```bash
 cd firmware
-find . -type f -exec sha256sum {} > checksums.txt \;
+find . -name "*.uf2" -type f -exec sha256sum {} \; > checksums.txt
 ```
