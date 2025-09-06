@@ -1,0 +1,151 @@
+name: Bundle Firmware Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  bundle-firmware:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch all history for all tags
+        fetch-tags: true  # Explicitly fetch all tags
+        
+    - name: Create checksums.txt
+      run: |
+        find . -name "*.uf2" -type f -exec sha256sum {} \; > checksums.txt
+        echo "Created checksums.txt:"
+        cat checksums.txt
+        
+    - name: Create versions.txt and get latest tags
+      id: versions
+      run: |
+        echo "Release Tag: ${{ github.event.release.tag_name }}" > versions.txt
+        echo "Commit Hash: ${{ github.sha }}" >> versions.txt
+        echo "" >> versions.txt
+        
+        # Debug: Show all available tags
+        echo "All available tags:"
+        git tag -l | sort -V
+        echo ""
+        
+        # Find latest tags for each component pattern
+        echo "Searching for tags..."
+        main_tag=$(git tag -l "main_v*" | sort -V | tail -n 1)
+        display_tag=$(git tag -l "display_v*" | sort -V | tail -n 1) 
+        defcon32_tag=$(git tag -l "defcon32_badge_v*" | sort -V | tail -n 1)
+        defcon33_tag=$(git tag -l "defcon33_badge_v*" | sort -V | tail -n 1)
+        
+        # Debug: Show search results
+        echo "Tag search results:"
+        echo "  main_v* tags: $(git tag -l "main_v*")"
+        echo "  display_v* tags: $(git tag -l "display_v*")"
+        echo "  defcon32_badge_v* tags: $(git tag -l "defcon32_badge_v*")"
+        echo "  defcon33_badge_v* tags: $(git tag -l "defcon33_badge_v*")"
+        echo ""
+        
+        # Extract version numbers and write in new format
+        if [ -n "${main_tag}" ]; then
+          main_version=$(echo "${main_tag}" | sed 's/main_v/v/')
+          echo "freewili_main.uf2: ${main_version}" >> versions.txt
+        fi
+        
+        if [ -n "${display_tag}" ]; then
+          display_version=$(echo "${display_tag}" | sed 's/display_v/v/')
+          echo "freewili_display.uf2: ${display_version}" >> versions.txt
+        fi
+        
+        if [ -n "${defcon32_tag}" ]; then
+          defcon32_version=$(echo "${defcon32_tag}" | sed 's/defcon32_badge_v/v/')
+          echo "defcon32_badge.uf2: ${defcon32_version}" >> versions.txt
+        fi
+        
+        if [ -n "${defcon33_tag}" ]; then
+          defcon33_version=$(echo "${defcon33_tag}" | sed 's/defcon33_badge_v/v/')
+          echo "defcon33_badge.uf2: ${defcon33_version}" >> versions.txt
+        fi
+        
+        echo "Created versions.txt:"
+        cat versions.txt
+        
+        # Debug: Show what tags were found
+        echo "Found tags:"
+        echo "  main_tag: ${main_tag}"
+        echo "  display_tag: ${display_tag}"
+        echo "  defcon32_tag: ${defcon32_tag}"
+        echo "  defcon33_tag: ${defcon33_tag}"
+        
+        # Export tags to environment for use in later steps
+        echo "MAIN_TAG=${main_tag}" >> $GITHUB_ENV
+        echo "DISPLAY_TAG=${display_tag}" >> $GITHUB_ENV
+        echo "DEFCON32_TAG=${defcon32_tag}" >> $GITHUB_ENV
+        echo "DEFCON33_TAG=${defcon33_tag}" >> $GITHUB_ENV
+        
+    - name: Create bundle zip
+      run: |
+        zip_name="freewili-firmware-${{ github.event.release.tag_name }}.zip"
+        zip "$zip_name" *.uf2 checksums.txt versions.txt
+        echo "Created bundle: $zip_name"
+        ls -la "$zip_name"
+        
+    - name: Upload bundle to release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        zip_name="freewili-firmware-${{ github.event.release.tag_name }}.zip"
+        gh release upload ${{ github.event.release.tag_name }} "$zip_name"
+        echo "Uploaded bundle: $zip_name"
+        
+    - name: Create and upload renamed UF2 files
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Upload freewili_main.uf2 renamed with version
+        if [ -f "freewili_main.uf2" ] && [ -n "$MAIN_TAG" ]; then
+          version=$(echo "$MAIN_TAG" | sed 's/main_//')
+          renamed_file="freewili_main_${version}.uf2"
+          cp "freewili_main.uf2" "$renamed_file"
+          gh release upload ${{ github.event.release.tag_name }} "$renamed_file"
+          echo "Uploaded: $renamed_file"
+        else
+          echo "Skipping freewili_main.uf2 - file missing or no tag found (MAIN_TAG='$MAIN_TAG')"
+        fi
+        
+        # Upload freewili_display.uf2 renamed with version  
+        if [ -f "freewili_display.uf2" ] && [ -n "$DISPLAY_TAG" ]; then
+          version=$(echo "$DISPLAY_TAG" | sed 's/display_//')
+          renamed_file="freewili_display_${version}.uf2"
+          cp "freewili_display.uf2" "$renamed_file"
+          gh release upload ${{ github.event.release.tag_name }} "$renamed_file"
+          echo "Uploaded: $renamed_file"
+        else
+          echo "Skipping freewili_display.uf2 - file missing or no tag found (DISPLAY_TAG='$DISPLAY_TAG')"
+        fi
+        
+        # Upload defcon32_badge.uf2 renamed with version
+        if [ -f "defcon32_badge.uf2" ] && [ -n "$DEFCON32_TAG" ]; then
+          version=$(echo "$DEFCON32_TAG" | sed 's/defcon32_badge_//')
+          renamed_file="defcon32_badge_${version}.uf2"
+          cp "defcon32_badge.uf2" "$renamed_file" 
+          gh release upload ${{ github.event.release.tag_name }} "$renamed_file"
+          echo "Uploaded: $renamed_file"
+        else
+          echo "Skipping defcon32_badge.uf2 - file missing or no tag found (DEFCON32_TAG='$DEFCON32_TAG')"
+        fi
+        
+        # Upload defcon33_badge.uf2 renamed with version
+        if [ -f "defcon33_badge.uf2" ] && [ -n "$DEFCON33_TAG" ]; then
+          version=$(echo "$DEFCON33_TAG" | sed 's/defcon33_badge_//')
+          renamed_file="defcon33_badge_${version}.uf2"
+          cp "defcon33_badge.uf2" "$renamed_file"
+          gh release upload ${{ github.event.release.tag_name }} "$renamed_file"
+          echo "Uploaded: $renamed_file"
+        else
+          echo "Skipping defcon33_badge.uf2 - file missing or no tag found (DEFCON33_TAG='$DEFCON33_TAG')"
+        fi
