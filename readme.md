@@ -1,1 +1,1 @@
-Follow update instructions here: [https://docs.freewili.com/getting-started/freewili-firmware-update/](https://docs.freewili.com/getting-started/freewili-firmware-update/)
+Use the FreeWili OG App Explorer ([AppExplorer](https://github.com/freewili/fwOGAppExplorer)) to update to the Free Wili OG
