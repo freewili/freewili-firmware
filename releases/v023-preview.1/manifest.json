@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "product": "FREE-WILi-OG",
+  "release": "v023-preview.1",
+  "title": "v023-preview.1 - FreeWili OG firmware update",
+  "source": {
+    "base_revision": "9a4f0f992c0e7420dfbe9c7e09568f5727bd618a",
+    "dirty": true,
+    "build": "n-2026-09-04-24-g9a4f0f99-dirty",
+    "tested_on": "2026-09-28"
+  },
+  "files": [
+    {
+      "component": "main",
+      "version": "023",
+      "file": "firmware/ogfw_main-023.uf2",
+      "size": 10703872,
+      "sha256": "4788cb39640c42b0af483b20d57df4ff51f1e2e5b801027c1838b71615ed3f20",
+      "embedded_display": {
+        "version": "019",
+        "offset": 596440,
+        "size": 4548368,
+        "sha256": "52ba921848aa16f6cd78d8e46fb5a22d2ef68d5c5ca3e3a782e4ce49193dec26"
+      }
+    }
+  ]
+}
