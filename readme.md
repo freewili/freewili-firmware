@@ -6,42 +6,42 @@ Each new release includes a versioned ZIP, manifest, release notes, SHA-256
 checksums, and a standalone MAIN UF2 for installation with
 [FreeWili OG App Explorer](https://github.com/freewili/fwOGAppExplorer).
 
-## Current release: v023
+## Current release: v024
 
-**MAIN 023 / DISPLAY 019**, packaged from the September 28, 2026 tested build.
-The single MAIN UF2 includes the matching DISPLAY application. It updates
-shared menu integration and reduces screenshot memory use. The script/capture
-pool is 6 KiB smaller; see the [full notes](releases/v023/README.md)
-for changes, hardware checks, and limitations.
+**MAIN 024 / DISPLAY 020**, packaged from the September 28, 2026 tested build.
+The single MAIN UF2 includes the matching DISPLAY application. It fixes choppy
+playback of built-in audio assets and generated tones. A 30-asset listening
+test passed; see the [full notes](releases/v024/README.md) for changes, hardware
+checks, and limitations.
 
 [Download the latest release](https://github.com/freewili/freewili-firmware/releases/latest).
-**v023 is the current Stable release.** It contains the same firmware bytes
-as the tested `v023-preview.1`, packaged under the Stable release name.
+**v024 is the current Stable release.** It supersedes v023 and includes its
+shared menu integration and memory changes.
 
 **`release_v73` is deprecated legacy firmware.** Its version numbering belongs
-to the old firmware line; it is not newer than OG 023. Use v023 for current
+to the old firmware line; it is not newer than OG 024. Use v024 for current
 FreeWili OG installations. Legacy downloads remain available for historical
 recovery only.
 
 ## Install
 
-1. Download the release's `ogfw_main-023.uf2`, or extract it from the ZIP's
+1. Download the release's `ogfw_main-024.uf2`, or extract it from the ZIP's
    `firmware/` folder. The ZIP itself is not an installable UF2.
 2. Open [FreeWili OG App Explorer](https://github.com/freewili/fwOGAppExplorer/releases/latest).
    If this board has never run OG apps, use **OG Bootloader Installer >
    Install FreeWili OG Bootloader** once. This installation erases MAIN first;
    back up files before converting a board from the deprecated firmware.
 3. Place the downloaded UF2 in App Explorer's local `catalog/` folder, select
-   it in **App Explorer**, check MAIN **023** / DISPLAY **019**, and press
+   it in **App Explorer**, check MAIN **024** / DISPLAY **020**, and press
    **Flash**. Select the intended board if more than one is connected.
 4. Keep USB power connected until MAIN restarts and finishes updating DISPLAY.
 
 The included command-line tool can also inspect and install the file:
 
 ```text
-fwogcli info ogfw_main-023.uf2
+fwogcli info ogfw_main-024.uf2
 fwogcli list
-fwogcli flash ogfw_main-023.uf2 --cpu main --device <chip-id>
+fwogcli flash ogfw_main-024.uf2 --cpu main --device <chip-id>
 ```
 
 Install this UF2 on **MAIN**. DISPLAY's matching application is embedded in it
@@ -59,7 +59,7 @@ Each immutable `releases/<version>/` folder contains:
 ```text
 manifest.json
 README.md
-firmware/ogfw_main-023.uf2
+firmware/ogfw_main-024.uf2
 ```
 
 The ZIP contains those files at its root. The manifest records MAIN's version,
@@ -73,7 +73,7 @@ To publish a new release:
 2. Validate and package it:
    ```sh
    python -m unittest discover -s scripts -p 'test_*.py'
-   python scripts/package_release.py releases/v023
+   python scripts/package_release.py releases/v024
    ```
 3. Open a pull request and merge after validation passes. Never push directly
    to `main`.

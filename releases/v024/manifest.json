@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "product": "FREE-WILi-OG",
+  "release": "v024",
+  "title": "v024 - FreeWili OG audio playback fix",
+  "source": {
+    "base_revision": "9a4f0f992c0e7420dfbe9c7e09568f5727bd618a",
+    "dirty": true,
+    "build": "n-2026-09-04-24-g9a4f0f99-dirty",
+    "bsp_base_revision": "061000e3427d2b16cc1756e9e130dfbf5d40f839",
+    "bsp_dirty": true,
+    "tested_on": "2026-09-28"
+  },
+  "files": [
+    {
+      "component": "main",
+      "version": "024",
+      "file": "firmware/ogfw_main-024.uf2",
+      "size": 10704896,
+      "sha256": "48c3174b73fb392397325aa81f25d40ba5e662d308a86c1dd2664593f7378eb9",
+      "embedded_display": {
+        "version": "020",
+        "offset": 596440,
+        "size": 4548704,
+        "sha256": "d65f0f4be31c233890f518e8e73817906420882eedc9744ed525e6d658fd1882"
+      }
+    }
+  ]
+}
