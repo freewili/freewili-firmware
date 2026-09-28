@@ -6,19 +6,22 @@ Each new release includes a versioned ZIP, manifest, release notes, SHA-256
 checksums, and a standalone MAIN UF2 for installation with
 [FreeWili OG App Explorer](https://github.com/freewili/fwOGAppExplorer).
 
-## Current preview: v023-preview.1
+## Current release: v023
 
 **MAIN 023 / DISPLAY 019**, packaged from the September 28, 2026 tested build.
 The single MAIN UF2 includes the matching DISPLAY application. It updates
 shared menu integration and reduces screenshot memory use. The script/capture
-pool is 6 KiB smaller; see the [full notes](releases/v023-preview.1/README.md)
+pool is 6 KiB smaller; see the [full notes](releases/v023/README.md)
 for changes, hardware checks, and limitations.
 
-[Download the preview](https://github.com/freewili/freewili-firmware/releases/tag/v023-preview.1).
-Preview releases are explicitly published development snapshots. Stable
-releases have GitHub's pre-release flag turned off. This update does not
-promote a new Stable release; the old `release_v73` is deprecated firmware
-with different version numbering, not an OG 073 update.
+[Download the latest release](https://github.com/freewili/freewili-firmware/releases/latest).
+**v023 is the current Stable release.** It contains the same firmware bytes
+as the tested `v023-preview.1`, packaged under the Stable release name.
+
+**`release_v73` is deprecated legacy firmware.** Its version numbering belongs
+to the old firmware line; it is not newer than OG 023. Use v023 for current
+FreeWili OG installations. Legacy downloads remain available for historical
+recovery only.
 
 ## Install
 
@@ -70,7 +73,7 @@ To publish a new release:
 2. Validate and package it:
    ```sh
    python -m unittest discover -s scripts -p 'test_*.py'
-   python scripts/package_release.py releases/v023-preview.1
+   python scripts/package_release.py releases/v023
    ```
 3. Open a pull request and merge after validation passes. Never push directly
    to `main`.
@@ -83,4 +86,4 @@ To publish a new release:
 
 The root `ogfw_mainV21.uf2`, `Legacy/`, and older releases remain available as
 historical downloads. New releases live in their versioned folders and GitHub
-Release assets; the old root file is not the current preview.
+Release assets; the old root file is not the current release.
