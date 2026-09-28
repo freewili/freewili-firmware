@@ -1,0 +1,46 @@
+name: Publish firmware release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release folder name (for example v023-preview.1)'
+        required: true
+        type: string
+      channel:
+        description: Release channel
+        required: true
+        type: choice
+        options: [preview, stable]
+        default: preview
+permissions:
+  contents: write
+concurrency:
+  group: publish-${{ inputs.version }}
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate and package
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          [[ "$VERSION" =~ ^v[0-9][A-Za-z0-9.-]*$ ]] || exit 1
+          python -m unittest discover -s scripts -p 'test_*.py'
+          python scripts/package_release.py "releases/$VERSION"
+      - name: Publish complete package
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ inputs.version }}
+          CHANNEL: ${{ inputs.channel }}
+        run: |
+          TITLE=$(python -c 'import json,os; print(json.load(open("releases/"+os.environ["VERSION"]+"/manifest.json"))["title"])')
+          FLAGS=(--latest)
+          if [[ "$CHANNEL" == preview ]]; then FLAGS=(--prerelease --latest=false); fi
+          gh release create "$VERSION" "dist/FREE-WILi-OG-$VERSION.zip" "dist/FREE-WILi-OG-$VERSION.zip.sha256" releases/"$VERSION"/firmware/*.uf2 "dist/checksums-$VERSION.txt" --target "$GITHUB_SHA" --title "$TITLE" --notes-file "releases/$VERSION/README.md" "${FLAGS[@]}" --draft
+          gh release edit "$VERSION" --draft=false "${FLAGS[@]}"

@@ -1,0 +1,4 @@
+* text=auto eol=lf
+*.uf2 binary
+*.bin binary
+*.zip binary
