@@ -17,6 +17,8 @@ checks, and limitations.
 [Download the latest release](https://github.com/freewili/freewili-firmware/releases/latest).
 **v024 is the current Stable release.** It supersedes v023 and includes its
 shared menu integration and memory changes.
+The Preview channel's current release, `v024-preview.1`, carries the same
+MAIN 024 / DISPLAY 020 bytes.
 
 **`release_v73` is deprecated legacy firmware.** Its version numbering belongs
 to the old firmware line; it is not newer than OG 024. Use v024 for current
